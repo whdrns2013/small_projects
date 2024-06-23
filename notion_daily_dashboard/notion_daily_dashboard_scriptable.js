@@ -1,6 +1,6 @@
 // Notion Settings
-const databaseId = 'my-database-id';
-const apiKey = 'my-api-key';
+const databaseId = 'myDatabaseId';
+const apiKey = 'myApiKey';
 const notionVersion = '2022-06-28';
 const baseUrl = 'https://api.notion.com/v1/databases/';
 
