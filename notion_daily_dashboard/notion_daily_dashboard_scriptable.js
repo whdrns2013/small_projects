@@ -59,6 +59,8 @@ async function createWidget() {
         return;
     }
     const events = []; // 일정을 모아놓는 events 객체 (배열)
+
+    // 일정 데이터 정제
     for (let i = 0; i < res.results.length; i++) {
         const prop = res.results[i].properties; // properties
         const tempDict = {}; // 원하는 값을 담을 dictionary
@@ -104,13 +106,12 @@ async function createWidget() {
 
     // 위젯 생성
     let widget = new ListWidget();
-    // widget.backgroundColor = new Color("#ffffff");
     let gradient = new LinearGradient();
-    gradient.colors = [new Color("#f5f7fa"), new Color("#c3cfe2")];
+    gradient.colors = [new Color("#f5f7fa"), new Color("#c3cfe2")]; // 백그라운드 색상
     gradient.locations = [0, 1];
     widget.backgroundGradient = gradient;
 
-    // 이벤트 데이터를 텍스트로 위젯에 추가
+    // 일정 데이터를 텍스트로 위젯에 추가
     if (events.length === 0) {
         let noEventText = widget.addText("오늘 일정이 없습니다.");
         noEventText.textColor = new Color("#ff0000");
@@ -132,6 +133,7 @@ async function createWidget() {
             widget.addSpacer(4);  // 항목 사이에 약간의 간격 추가
         }
     }
+
     // 위젯 띄우기
     if (config.runsInWidget) {
         Script.setWidget(widget);
@@ -144,6 +146,12 @@ async function createWidget() {
 
 // 위젯 생성 함수 호출
 createWidget()
+
+
+
+
+
+///////////////////////////////////   archive   ////////////////////////////////////
 
 // node 실행시 응답값 테스트
 // fetchData().then(res => {
