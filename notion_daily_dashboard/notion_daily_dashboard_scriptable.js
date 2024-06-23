@@ -116,7 +116,7 @@ async function createWidget() {
     // 일정 데이터를 텍스트로 위젯에 추가
     if (events.length === 0) {
         let noEventText = widget.addText("오늘 일정이 없습니다.");
-        noEventText.textColor = new Color("#0p0000");
+        noEventText.textColor = new Color("#000000");
         noEventText.font = Font.systemFont(basicFontSize*2.5);
         widget.addSpacer(4);
     } else {
