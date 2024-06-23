@@ -14,6 +14,8 @@ if (Device.isPad()){
 
 // Get Date
 let now = new Date();
+let offset = now.getTimezoneOffset() * 60000;
+let today = new Date(now.getTime() - offset).toISOString().split('T')[0];
 let today = new Date().toISOString().split('T')[0];
 console.log(today);
 
@@ -114,8 +116,8 @@ async function createWidget() {
     // 일정 데이터를 텍스트로 위젯에 추가
     if (events.length === 0) {
         let noEventText = widget.addText("오늘 일정이 없습니다.");
-        noEventText.textColor = new Color("#ff0000");
-        noEventText.font = Font.systemFont(basicFontSize);
+        noEventText.textColor = new Color("#0p0000");
+        noEventText.font = Font.systemFont(basicFontSize*2.5);
         widget.addSpacer(4);
     } else {
         let textItem = widget.addText("📅 오늘 일정 / Notion");
