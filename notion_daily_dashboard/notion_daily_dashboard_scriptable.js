@@ -1,5 +1,4 @@
 ///////////////////////////////////   Setting   ///////////////////////////////////
-
 // Notion Settings
 const databaseId = 'myDatabaseId';
 const apiKey = 'myApiKey';
@@ -7,7 +6,7 @@ const notionVersion = '2022-06-28';
 const baseUrl = 'https://api.notion.com/v1/databases/';
 
 // Font Settings
-console.log('1: Font settings')
+console.log('1: Font settings');
 let basicFontSize = 12;
 let lineFontSize = 6;
 if (Device.isPad()){
@@ -17,9 +16,8 @@ if (Device.isPad()){
 
 
 ///////////////////////////////////   Request   ///////////////////////////////////
-
 // Get Date
-console.log('2: get date')
+console.log('2: get date');
 let now = new Date();
 let offset = now.getTimezoneOffset() * 60000;
 let today = new Date(now.getTime() - offset).toISOString().split('T')[0];
@@ -47,7 +45,7 @@ async function fetchData() {
             ]
         }
     };
-    request.body = JSON.stringify(reqBody)
+    request.body = JSON.stringify(reqBody);
     try {
         // const res = await fetch(request);    // node 실행시
         // return await res.json()              // node 실행시
@@ -61,35 +59,18 @@ async function fetchData() {
 
 
 ///////////////////////////////////   Converting   ///////////////////////////////////
-
-
-
-
-///////////////////////////////////   Create Widget   ///////////////////////////////////
-
-// 위젯 생성
-async function createWidget() {
-    console.log('3: start create widget')
-    const res = await fetchData();
-    if (!res) {
-        console.error("데이터를 가져오지 못했습니다.");
-        return;
-    }
+function convertingData(res){
+    console.log('7: start converting');
     const events = []; // 일정을 모아놓는 events 객체 (배열)
-
-    console.log('4: response count ' + res.results.length)
-
-    // 일정 데이터 정제
-    console.log('5: response teansform')
     for (let i = 0; i < res.results.length; i++) {
         const prop = res.results[i].properties; // properties
         const tempDict = {}; // 원하는 값을 담을 dictionary
         // tempDict['날짜'] = prop['날짜']['date']['start']; // 제외
-        console.log(prop['일정']['title'][0]['plain_text']);
+        console.log('Converting[' + i + ']... ' + prop['일정']['title'][0]['plain_text']);
         try{
             tempDict['시작시간'] = '[ ' + prop['시작시간']['rich_text'][0]['plain_text'] + ' ]';
         }catch{
-            tempDict['시작시간'] = '없음'
+            tempDict['시작시간'] = '없음';
         }
         try {
             tempDict['2080'] = '/' + prop['2080']['select']['name'] + '/';
@@ -118,10 +99,11 @@ async function createWidget() {
         }
         console.log(tempDict);
         events.push(tempDict); // dictionary를 events 배열에 담음
+        console.log(i + ' converting 완료');
     }
 
     // 시작시간 오름차순으로 정렬
-    console.log('6: event sorting')
+    console.log('7: event sorting');
     events.sort(function (a, b) {
         if (a['시작시간'] < b['시작시간']) return -1;
         if (a['시작시간'] > b['시작시간']) return 1;
@@ -138,21 +120,38 @@ async function createWidget() {
         }else{
         }
     }
+    return events
+}
 
-    console.log('7: print events')
+
+///////////////////////////////////   Create Widget   ///////////////////////////////////
+async function createWidget() {
+    console.log('3: start create widget');
+    const res = await fetchData();
+    if (!res) {
+        console.error("데이터를 가져오지 못했습니다.");
+        return;
+    }
+    console.log('4: response count ' + res.results.length);
+
+    // 일정 데이터 정제
+    console.log('5: response teansform');
+    events = convertingData(res);
+
+    // 변환 결과값 확인
+    console.log('8: print events');
     console.log(events.length);
 
     // 위젯 생성
-    console.log('8: make widget')
+    console.log('9: make widget');
     let widget = new ListWidget();
     let gradient = new LinearGradient();
     gradient.colors = [new Color("#f5f7fa"), new Color("#c3cfe2")]; // 백그라운드 색상
     gradient.locations = [0, 1];
     widget.backgroundGradient = gradient;
 
-
     // 일정 데이터를 텍스트로 위젯에 추가
-    console.log('9: append events in the widget')
+    console.log('10: append events in the widget');
     if (events.length === 0) {
         let noEventText = widget.addText("오늘 일정이 없습니다.");
         noEventText.textColor = new Color("#000000");
@@ -176,7 +175,7 @@ async function createWidget() {
     }
 
     // 위젯 띄우기
-    console.log('10: set widget')
+    console.log('11: set widget');
     if (config.runsInWidget) {
         Script.setWidget(widget);
     } else {
@@ -186,12 +185,8 @@ async function createWidget() {
     Script.complete();
 }
 
-
 // 위젯 생성 함수 호출
-createWidget()
-
-
-
+createWidget();
 
 
 ///////////////////////////////////   archive   ////////////////////////////////////
