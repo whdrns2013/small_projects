@@ -16,7 +16,6 @@ if (Device.isPad()){
 let now = new Date();
 let offset = now.getTimezoneOffset() * 60000;
 let today = new Date(now.getTime() - offset).toISOString().split('T')[0];
-let today = new Date().toISOString().split('T')[0];
 console.log(today);
 
 // HTTP request
