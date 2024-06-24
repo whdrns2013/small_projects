@@ -1,17 +1,22 @@
+///////////////////////////////////   Setting   ///////////////////////////////////
+
 // Notion Settings
 const databaseId = 'myDatabaseId';
 const apiKey = 'myApiKey';
 const notionVersion = '2022-06-28';
 const baseUrl = 'https://api.notion.com/v1/databases/';
 
-// Global Settings
-console.log('1: global settings')
+// Font Settings
+console.log('1: Font settings')
 let basicFontSize = 12;
 let lineFontSize = 6;
 if (Device.isPad()){
     basicFontSize = basicFontSize * 0.9;
     lineFontSize = lineFontSize * 0.9;
 }
+
+
+///////////////////////////////////   Request   ///////////////////////////////////
 
 // Get Date
 console.log('2: get date')
@@ -54,6 +59,14 @@ async function fetchData() {
     }
 }
 
+
+///////////////////////////////////   Converting   ///////////////////////////////////
+
+
+
+
+///////////////////////////////////   Create Widget   ///////////////////////////////////
+
 // 위젯 생성
 async function createWidget() {
     console.log('3: start create widget')
@@ -65,7 +78,6 @@ async function createWidget() {
     const events = []; // 일정을 모아놓는 events 객체 (배열)
 
     console.log('4: response count ' + res.results.length)
-//     console.log(res.results)
 
     // 일정 데이터 정제
     console.log('5: response teansform')
@@ -173,6 +185,7 @@ async function createWidget() {
 
     Script.complete();
 }
+
 
 // 위젯 생성 함수 호출
 createWidget()
