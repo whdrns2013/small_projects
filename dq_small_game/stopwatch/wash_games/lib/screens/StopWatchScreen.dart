@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:wash_games/BottomNavigator.dart';
 
 class StopWatchScreen extends StatefulWidget {
   const StopWatchScreen({super.key});
@@ -10,9 +11,12 @@ class StopWatchScreen extends StatefulWidget {
 
 class GlobalSetting {
   static const double timeFontSize = 90;
+  static const TextStyle timeTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 90,
+    fontWeight: FontWeight.w200,
+  );
   static const double stopwatchStartStopIconSize = 100;
-  static const double bellowIconSize = 40;
-  static const double bellowIconFontSize = 20;
 
   static Color startStopButtonTextColorDeact =
       const Color.fromARGB(240, 0, 255, 0);
@@ -37,6 +41,14 @@ class GlobalSetting {
   static String lapRefreshButtonTextAct = '재설정';
 }
 
+class LapSet {
+  final String lapName;
+  final String lapTime;
+  final String lapSetString;
+  const LapSet({Key? key, required this.lapName, required this.lapTime})
+      : lapSetString = lapName + '      ' + lapTime;
+}
+
 class _StopWatchScreenState extends State<StopWatchScreen> {
   bool isRunning = false;
   bool isStopped = false;
@@ -44,11 +56,21 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
   int subScreenNumber = 0;
   late Timer timer;
   int miliSeconds = 0;
-
-  void nullAction() {}
+  List<LapSet> lapList = [];
+  int lapCount = 1;
 
   void Lap() {
-    print('lap');
+    String lapName = '랩 ' + lapCount.toString();
+    String lapTime = timeFormatting(miliSeconds, 2, 4) +
+        ':' +
+        timeFormatting(miliSeconds, 5, 7) +
+        '.' +
+        timeFormatting(miliSeconds, 8, 10);
+    setState(() {
+      lapList.add(LapSet(lapName: lapName, lapTime: lapTime));
+    });
+    lapCount += 1;
+    // print(lapList);
   }
 
   void onTick(Timer timer) {
@@ -78,6 +100,8 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
       isStopped = false;
       isRunning = false;
       miliSeconds = 0;
+      lapCount = 1;
+      lapList.clear();
     });
   }
 
@@ -103,11 +127,7 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                     width: 115,
                     child: Text(
                       timeFormatting(miliSeconds, 2, 4),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: GlobalSetting.timeFontSize,
-                        fontWeight: FontWeight.w200,
-                      ),
+                      style: GlobalSetting.timeTextStyle,
                     )),
                 Container(
                     width: 30,
@@ -123,11 +143,7 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                     width: 115,
                     child: Text(
                       timeFormatting(miliSeconds, 5, 7),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: GlobalSetting.timeFontSize,
-                        fontWeight: FontWeight.w200,
-                      ),
+                      style: GlobalSetting.timeTextStyle,
                     )),
                 Container(
                     width: 20,
@@ -143,11 +159,7 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                     width: 115,
                     child: Text(
                       timeFormatting(miliSeconds, 8, 10),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: GlobalSetting.timeFontSize,
-                        fontWeight: FontWeight.w200,
-                      ),
+                      style: GlobalSetting.timeTextStyle,
                     )),
               ],
             )), // 시간초
@@ -228,90 +240,62 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
               // ),
             ))),
             Divider(
-              color: Color.fromARGB(120, 230, 230, 230),
-              thickness: 1.0,
-            ),
-            Flexible(
-              // 하단 세계 시각 / 알람 / 스톱워치 / 타이머
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(children: [
-                          IconButton(
-                            onPressed: nullAction,
-                            icon: Icon(
-                              Icons.language,
-                              color: Colors.grey,
-                            ),
-                            iconSize: GlobalSetting.bellowIconSize,
-                          ),
-                          Text(
-                            "세계시계",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: GlobalSetting.bellowIconFontSize),
-                          )
-                        ]),
-                        Column(children: [
-                          IconButton(
-                            onPressed: nullAction,
-                            icon: Icon(
-                              Icons.alarm,
-                              color: Colors.grey,
-                            ),
-                            iconSize: GlobalSetting.bellowIconSize,
-                          ),
-                          Text(
-                            "알람",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: GlobalSetting.bellowIconFontSize),
-                          )
-                        ]),
-                        Column(children: [
-                          IconButton(
-                            onPressed: nullAction,
-                            icon: Icon(
-                              Icons.timer,
-                              color: Colors.orange,
-                            ),
-                            iconSize: GlobalSetting.bellowIconSize,
-                          ),
-                          Text(
-                            "스톱워치",
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontSize: GlobalSetting.bellowIconFontSize),
-                          )
-                        ]),
-                        Column(children: [
-                          IconButton(
-                            onPressed: nullAction,
-                            icon: Icon(
-                              // Icons.timer_outlined,
-                              Icons.access_time,
-                              color: Colors.grey,
-                            ),
-                            iconSize: GlobalSetting.bellowIconSize,
-                          ),
-                          Text(
-                            "타이머",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: GlobalSetting.bellowIconFontSize),
-                          )
-                        ])
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )
+                color: Color.fromARGB(50, 230, 230, 230),
+                thickness: 1.2,
+                height: 25),
+            // lapListWidget(lapName: 'lap1', lapTime: 12345),
+            Expanded(
+                flex: 3,
+                child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: lapList.length,
+                    itemBuilder: (context, index) {
+                      final LapSet lap = lapList[lapList.length - 1 - index];
+                      return lapListWidget(
+                          lapName: lap.lapName, lapTime: lap.lapTime);
+                    })),
+            BottomNavigator()
           ],
         ));
+  }
+}
+
+class lapListWidget extends StatelessWidget {
+  final String lapName;
+  final String lapTime;
+  static TextStyle textStyle =
+      TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
+
+  const lapListWidget({Key? key, required this.lapName, required this.lapTime})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          height: 36,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    lapName,
+                    style: textStyle,
+                  ),
+                  Text(
+                    lapTime.toString(),
+                    style: textStyle,
+                  )
+                ]),
+          ),
+        ),
+        Divider(
+          color: Color.fromARGB(50, 230, 230, 230),
+          thickness: 1.2,
+        ),
+      ],
+    );
   }
 }

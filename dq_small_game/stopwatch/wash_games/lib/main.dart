@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wash_games/screens/stopwatch.dart';
+import 'package:wash_games/screens/StopWatchScreen.dart';
 
 void main() {
   runApp(const MyApp());
