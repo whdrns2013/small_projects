@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class StopWatchScreen extends StatefulWidget {
@@ -7,14 +9,82 @@ class StopWatchScreen extends StatefulWidget {
 }
 
 class GlobalSetting {
-  static const double stopwatchFontSize = 80;
+  static const double timeFontSize = 90;
   static const double stopwatchStartStopIconSize = 100;
   static const double bellowIconSize = 40;
   static const double bellowIconFontSize = 20;
+
+  static Color startStopButtonTextColorDeact =
+      const Color.fromARGB(240, 0, 255, 0);
+  static Color startStopButtonColorDeact = const Color.fromARGB(90, 0, 150, 0);
+  static Color startStopButtonTextColorAct =
+      const Color.fromARGB(255, 255, 50, 50);
+  static Color startStopButtonColorAct = const Color.fromARGB(80, 150, 0, 0);
+
+  static Color lapRefreshButtonTextColorDeact =
+      const Color.fromARGB(200, 150, 150, 150);
+  static Color lapRefreshButtonColorDeact =
+      const Color.fromARGB(100, 150, 150, 150);
+  static Color lapRefreshButtonTextColorAct =
+      const Color.fromARGB(200, 200, 200, 200);
+  static Color lapRefreshButtonColorAct =
+      const Color.fromARGB(100, 200, 200, 200);
+
+  static double startStopFontSize = 16;
+  static String startStopButtonTextDeact = '시작';
+  static String startStopButtonTextAct = '중단';
+  static String lapRefreshButtonTextDeact = '랩';
+  static String lapRefreshButtonTextAct = '재설정';
 }
 
 class _StopWatchScreenState extends State<StopWatchScreen> {
+  bool isRunning = false;
+  bool isStopped = false;
+  bool isRefreshed = false;
+  int subScreenNumber = 0;
+  late Timer timer;
+  int miliSeconds = 0;
+
   void nullAction() {}
+
+  void Lap() {
+    print('lap');
+  }
+
+  void onTick(Timer timer) {
+    setState(() {
+      miliSeconds += 1;
+    });
+  }
+
+  void startStop() {
+    setState(() {
+      if (isRunning == true) {
+        isStopped = !isStopped;
+        timer.cancel();
+      } else {
+        isStopped = false;
+        timer = Timer.periodic(Duration(milliseconds: 1), onTick);
+      }
+      isRunning = !isRunning;
+      isRefreshed = false;
+    });
+    print(isRunning);
+  }
+
+  void refresh() {
+    setState(() {
+      isRefreshed = true;
+      isStopped = false;
+      isRunning = false;
+      miliSeconds = 0;
+    });
+  }
+
+  String timeFormatting(int miliSeconds, int start, int end) {
+    var duration = Duration(milliseconds: miliSeconds);
+    return duration.toString().substring(start, end);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +93,66 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
         body: Column(
           children: [
             SizedBox(
-              height: 230,
+              height: 210,
             ),
             Flexible(
-                child: Container(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    width: 115,
                     child: Text(
-              "00 : 00 : 00",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: GlobalSetting.stopwatchFontSize,
-                fontWeight: FontWeight.w200,
-              ),
-            ))), // 시간초
+                      timeFormatting(miliSeconds, 2, 4),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: GlobalSetting.timeFontSize,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    )),
+                Container(
+                    width: 30,
+                    child: Text(
+                      ':',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: GlobalSetting.timeFontSize,
+                          fontWeight: FontWeight.w200,
+                          letterSpacing: 5.0),
+                    )),
+                Container(
+                    width: 115,
+                    child: Text(
+                      timeFormatting(miliSeconds, 5, 7),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: GlobalSetting.timeFontSize,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    )),
+                Container(
+                    width: 20,
+                    child: Text(
+                      '.',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: GlobalSetting.timeFontSize,
+                          fontWeight: FontWeight.w200,
+                          letterSpacing: 0),
+                    )),
+                Container(
+                    width: 115,
+                    child: Text(
+                      timeFormatting(miliSeconds, 8, 10),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: GlobalSetting.timeFontSize,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    )),
+              ],
+            )), // 시간초
             SizedBox(
-              height: 80,
+              height: 65,
             ),
             Flexible(
                 // 랩/시작 버튼
@@ -44,11 +160,35 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                     child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: nullAction,
-                  icon: Icon(Icons.circle, color: Colors.grey),
-                  iconSize: GlobalSetting.stopwatchStartStopIconSize,
-                ),
+                Stack(children: [
+                  IconButton(
+                    onPressed: isStopped ? refresh : Lap,
+                    icon: Icon(Icons.circle,
+                        color: (isRunning || isStopped)
+                            ? GlobalSetting.lapRefreshButtonColorAct
+                            : GlobalSetting.lapRefreshButtonColorDeact),
+                    iconSize: GlobalSetting.stopwatchStartStopIconSize,
+                  ),
+                  Positioned(
+                    left: (isStopped) ? 38 : 51,
+                    top: 49,
+                    child: Text(
+                      (isStopped)
+                          ? GlobalSetting.lapRefreshButtonTextAct
+                          : GlobalSetting.lapRefreshButtonTextDeact,
+                      style: TextStyle(
+                          color: (isStopped || !isRefreshed)
+                              ? GlobalSetting.lapRefreshButtonTextColorAct
+                              : GlobalSetting.lapRefreshButtonTextColorDeact,
+                          fontSize: GlobalSetting.startStopFontSize),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: isStopped ? refresh : Lap,
+                    icon: Icon(Icons.circle, color: Color.fromARGB(0, 0, 0, 0)),
+                    iconSize: GlobalSetting.stopwatchStartStopIconSize,
+                  ),
+                ]),
                 SizedBox(
                   width: 60,
                 ),
@@ -60,11 +200,30 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                 SizedBox(
                   width: 60,
                 ),
-                IconButton(
-                  onPressed: nullAction,
-                  icon: Icon(Icons.circle, color: Colors.grey),
-                  iconSize: 100,
-                ),
+                Stack(children: [
+                  Positioned(
+                    left: 44,
+                    top: 49,
+                    child: Text(
+                      isRunning
+                          ? GlobalSetting.startStopButtonTextAct
+                          : GlobalSetting.startStopButtonTextDeact,
+                      style: TextStyle(
+                          color: isRunning
+                              ? GlobalSetting.startStopButtonTextColorAct
+                              : GlobalSetting.startStopButtonTextColorDeact,
+                          fontSize: GlobalSetting.startStopFontSize),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: startStop,
+                    icon: Icon(Icons.circle,
+                        color: isRunning
+                            ? GlobalSetting.startStopButtonColorAct
+                            : GlobalSetting.startStopButtonColorDeact),
+                    iconSize: GlobalSetting.stopwatchStartStopIconSize,
+                  ),
+                ])
               ],
               // ),
             ))),
