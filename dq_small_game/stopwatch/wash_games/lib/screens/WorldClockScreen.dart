@@ -10,6 +10,8 @@ class WorldClockScreen extends StatefulWidget {
 }
 
 class _WorldClockScreenState extends State<WorldClockScreen> {
+  DateTime dt = DateTime.now();
+  List<WorldClockRow> worldClockList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +25,119 @@ class _WorldClockScreenState extends State<WorldClockScreen> {
               thickness: 1.2,
               height: 25),
         ),
-        Expanded(flex: 6, child: Column()),
+        Expanded(
+            flex: 6,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  WorldClockRow(
+                    timeGap: 0,
+                    region: '서울',
+                    dt: dt,
+                  ),
+                  WorldClockRow(
+                    timeGap: 1,
+                    region: '괌',
+                    dt: dt,
+                  ),
+                  WorldClockRow(
+                    timeGap: -17,
+                    region: '로스앤젤레스',
+                    dt: dt,
+                  ),
+                ],
+              ),
+            )),
         BottomNavigator()
       ]),
+    );
+  }
+}
+
+class WorldClockRow extends StatelessWidget {
+  final int timeGap;
+  final String region;
+  final DateTime dt;
+  const WorldClockRow(
+      {Key? key, required this.timeGap, required this.region, required this.dt})
+      : super(key: key);
+
+  String timeGapDesc(timeGap) {
+    String day = '오늘';
+    if ((dt.hour.toInt() + timeGap) > 24) {
+      day = '내일';
+    } else if ((dt.hour.toInt() + timeGap) < 0) {
+      day = '어제';
+    }
+    String hour = '시간';
+    if (timeGap < 0) {
+      hour = timeGap.toString() + hour;
+    } else if (timeGap >= 0) {
+      hour = '+' + timeGap.toString() + hour;
+    }
+    return day + ', ' + hour;
+  }
+
+  String currentTime(dt, timeGap) {
+    String hour = ((dt.hour + timeGap) % 24).toString();
+    if (hour.length == 1) {
+      hour = '0' + hour;
+    }
+    String minute = dt.minute.toString();
+    if (minute.length == 1) {
+      minute = '0' + minute;
+    }
+    return hour + ':' + minute;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 20, 0),
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      timeGapDesc(timeGap),
+                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                    Text(region,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w500))
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      currentTime(dt, timeGap),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontWeight: FontWeight.w300),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Divider(
+                color: Color.fromARGB(50, 230, 230, 230),
+                thickness: 1.2,
+                height: 25),
+          ),
+        ],
+      ),
     );
   }
 }

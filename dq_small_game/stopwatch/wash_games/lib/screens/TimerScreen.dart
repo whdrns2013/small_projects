@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wash_games/BottomNavigator.dart';
 // TODO:: 현재 화면만 만들어놓음. 보강 필요
@@ -10,13 +11,47 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
+  DateTime selectedTime = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(children: [
         TopBar(),
-        Expanded(flex: 6, child: Column()),
+        Expanded(
+            flex: 7,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '타이머',
+                      style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                      // height: 200,
+                      ),
+                  Row(
+                    children: [
+                      // CupertinoDatePicker(
+                      //     mode: CupertinoDatePickerMode.time,
+                      //     use24hFormat: true,
+                      //     onDateTimeChanged: (DateTime newTime) {
+                      //       setState(() {
+                      //         selectedTime = newTime;
+                      //       });
+                      //     })
+                    ],
+                  )
+                ],
+              ),
+            )),
         BottomNavigator()
       ]),
     );
@@ -48,22 +83,9 @@ class TopBar extends StatelessWidget {
                     '편집',
                     style: TextStyle(color: Colors.orange, fontSize: 20),
                   ),
-                  Text(
-                    '+',
-                    style: TextStyle(color: Colors.orange, fontSize: 28),
-                  )
                 ],
               ),
             ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          alignment: Alignment.topLeft,
-          child: Text(
-            '타이머',
-            style: TextStyle(
-                fontSize: 40, color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
       ],

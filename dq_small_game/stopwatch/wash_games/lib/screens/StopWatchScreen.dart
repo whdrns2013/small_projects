@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wash_games/BottomNavigator.dart';
@@ -16,10 +17,10 @@ class GlobalSetting {
     fontSize: 90,
     fontWeight: FontWeight.w200,
   );
-  static const double stopwatchStartStopIconSize = 100;
+  static const double stopwatchStartStopIconSize = 110;
 
   static Color startStopButtonTextColorDeact =
-      const Color.fromARGB(240, 0, 255, 0);
+      const Color.fromARGB(255, 0, 255, 50);
   static Color startStopButtonColorDeact = const Color.fromARGB(90, 0, 150, 0);
   static Color startStopButtonTextColorAct =
       const Color.fromARGB(255, 255, 50, 50);
@@ -30,15 +31,20 @@ class GlobalSetting {
   static Color lapRefreshButtonColorDeact =
       const Color.fromARGB(100, 150, 150, 150);
   static Color lapRefreshButtonTextColorAct =
-      const Color.fromARGB(200, 200, 200, 200);
+      const Color.fromARGB(250, 250, 250, 250);
   static Color lapRefreshButtonColorAct =
       const Color.fromARGB(100, 200, 200, 200);
 
-  static double startStopFontSize = 16;
+  static double startStopFontSize = 17;
   static String startStopButtonTextDeact = '시작';
   static String startStopButtonTextAct = '중단';
   static String lapRefreshButtonTextDeact = '랩';
   static String lapRefreshButtonTextAct = '재설정';
+
+  static Color selectedSubScreenIconColor = Color.fromARGB(240, 240, 240, 240);
+  static Color unselectedSubScreenIconColor =
+      const Color.fromARGB(255, 90, 90, 90);
+  static double subScreenIconSize = 13;
 }
 
 class LapSet {
@@ -58,6 +64,8 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
   int miliSeconds = 0;
   List<LapSet> lapList = [];
   int lapCount = 1;
+  bool isCheet = false; // cheet
+  int cheetLapCount = 0; // cheet
 
   void Lap() {
     String lapName = '랩 ' + lapCount.toString();
@@ -65,12 +73,17 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
         ':' +
         timeFormatting(miliSeconds, 5, 7) +
         '.' +
-        timeFormatting(miliSeconds, 8, 10);
+        (isCheet // cheet
+            ? timeFormatting(miliSeconds, 8, 9) +
+                max(4, int.parse(timeFormatting(miliSeconds, 9, 10))).toString()
+            : timeFormatting(miliSeconds, 8, 10));
     setState(() {
       lapList.add(LapSet(lapName: lapName, lapTime: lapTime));
     });
     lapCount += 1;
-    // print(lapList);
+    cheetLapCount += 1; // cheet
+    isCheet = ((isCheet) & (cheetLapCount >= 2)) ? false : isCheet; // cheet
+    cheetLapCount = isCheet ? cheetLapCount : 0; // cheet
   }
 
   void onTick(Timer timer) {
@@ -105,6 +118,13 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
     });
   }
 
+  void toggleCheet() {
+    // cheet
+    setState(() {
+      isCheet = !isCheet;
+    });
+  }
+
   String timeFormatting(int miliSeconds, int start, int end) {
     var duration = Duration(milliseconds: miliSeconds);
     return duration.toString().substring(start, end);
@@ -116,9 +136,23 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         body: Column(
           children: [
-            SizedBox(
-              height: 210,
-            ),
+            Container(
+                height: 190,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: toggleCheet,
+                      icon: Icon(
+                        Icons.rectangle,
+                        size: 190,
+                      ),
+                      color: Colors.black,
+                    )
+                  ],
+                )),
+            // SizedBox(
+            //   height: 190,
+            // ),
             Flexible(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -164,7 +198,7 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
               ],
             )), // 시간초
             SizedBox(
-              height: 65,
+              height: 80,
             ),
             Flexible(
                 // 랩/시작 버튼
@@ -182,14 +216,14 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                     iconSize: GlobalSetting.stopwatchStartStopIconSize,
                   ),
                   Positioned(
-                    left: (isStopped) ? 38 : 51,
-                    top: 49,
+                    left: (isStopped) ? 42 : 55,
+                    top: 53,
                     child: Text(
                       (isStopped)
                           ? GlobalSetting.lapRefreshButtonTextAct
                           : GlobalSetting.lapRefreshButtonTextDeact,
                       style: TextStyle(
-                          color: (isStopped || !isRefreshed)
+                          color: (isRunning || isStopped)
                               ? GlobalSetting.lapRefreshButtonTextColorAct
                               : GlobalSetting.lapRefreshButtonTextColorDeact,
                           fontSize: GlobalSetting.startStopFontSize),
@@ -202,20 +236,40 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                   ),
                 ]),
                 SizedBox(
-                  width: 60,
+                  width: 70,
                 ),
-                Icon(Icons.circle, color: Colors.grey, size: 15),
+                Column(
+                  children: [
+                    SizedBox(height: 56),
+                    Icon(Icons.circle,
+                        color: isCheet
+                            ? GlobalSetting.unselectedSubScreenIconColor
+                            : GlobalSetting.selectedSubScreenIconColor,
+                        size: GlobalSetting.subScreenIconSize),
+                  ],
+                ),
                 SizedBox(
                   width: 10,
                 ),
-                Icon(Icons.circle, color: Colors.grey, size: 15),
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 56,
+                    ),
+                    Icon(Icons.circle,
+                        color: isCheet
+                            ? GlobalSetting.selectedSubScreenIconColor
+                            : GlobalSetting.unselectedSubScreenIconColor,
+                        size: GlobalSetting.subScreenIconSize),
+                  ],
+                ),
                 SizedBox(
-                  width: 60,
+                  width: 70,
                 ),
                 Stack(children: [
                   Positioned(
-                    left: 44,
-                    top: 49,
+                    left: 48,
+                    top: 53,
                     child: Text(
                       isRunning
                           ? GlobalSetting.startStopButtonTextAct
@@ -239,6 +293,9 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
               ],
               // ),
             ))),
+            SizedBox(
+              height: 15,
+            ),
             Divider(
                 color: Color.fromARGB(50, 230, 230, 230),
                 thickness: 1.2,
