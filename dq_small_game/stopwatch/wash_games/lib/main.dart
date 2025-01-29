@@ -27,5 +27,9 @@ references
 다트 논리 연산자 : https://needneo.tistory.com/229  
 화면 스크롤 기능 : https://dudgus907.tistory.com/7  
 주석 : https://while1.tistory.com/94#google_vignette  
+현재시간 : https://codechacha.com/ko/dart-get-current-time/  
+스크롤 : https://dudgus907.tistory.com/7  
+랜덤 : https://srcho.dev/30  
+string to int : https://mobile-app-developer.tistory.com/8  
 기타 : https://chatgpt.com/share/67950838-7698-800f-9e28-bbde296d2a4e  
 */
