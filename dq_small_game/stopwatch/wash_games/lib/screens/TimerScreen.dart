@@ -68,7 +68,7 @@ class TopBar extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 25,
+          height: 20,
         ),
         Container(
           height: 80,

@@ -111,7 +111,7 @@ class WorldClockRow extends StatelessWidget {
                     Text(region,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.w500))
                   ],
                 ),
@@ -152,7 +152,7 @@ class TopBar extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 25,
+          height: 20,
         ),
         Container(
           height: 80,
@@ -182,7 +182,7 @@ class TopBar extends StatelessWidget {
           child: Text(
             '세계 시계',
             style: TextStyle(
-                fontSize: 40, color: Colors.white, fontWeight: FontWeight.w600),
+                fontSize: 33, color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
       ],

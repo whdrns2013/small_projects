@@ -26,7 +26,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                   child: Text(
                     '알람',
                     style: TextStyle(
-                        fontSize: 40,
+                        fontSize: 33,
                         color: Colors.white,
                         fontWeight: FontWeight.w600),
                   ),
@@ -47,7 +47,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         ' 수면 | 기상',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 23,
+                            fontSize: 18,
                             fontWeight: FontWeight.w600),
                       )
                     ],
@@ -247,7 +247,7 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       SizedBox(
-        height: 25,
+        height: 20,
       ),
       Container(
         height: 80,

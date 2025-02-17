@@ -11,13 +11,13 @@ class StopWatchScreen extends StatefulWidget {
 }
 
 class GlobalSetting {
-  static const double timeFontSize = 90;
+  static const double timeFontSize = 75;
   static const TextStyle timeTextStyle = TextStyle(
     color: Colors.white,
-    fontSize: 90,
+    fontSize: 80,
     fontWeight: FontWeight.w200,
   );
-  static const double stopwatchStartStopIconSize = 110;
+  static const double stopwatchStartStopIconSize = 95;
 
   static Color startStopButtonTextColorDeact =
       const Color.fromARGB(255, 0, 255, 50);
@@ -35,7 +35,7 @@ class GlobalSetting {
   static Color lapRefreshButtonColorAct =
       const Color.fromARGB(100, 200, 200, 200);
 
-  static double startStopFontSize = 17;
+  static double startStopFontSize = 15;
   static String startStopButtonTextDeact = '시작';
   static String startStopButtonTextAct = '중단';
   static String lapRefreshButtonTextDeact = '랩';
@@ -137,14 +137,14 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
         body: Column(
           children: [
             Container(
-                height: 190,
+                height: 180,
                 child: Row(
                   children: [
                     IconButton(
                       onPressed: toggleCheet,
                       icon: Icon(
                         Icons.rectangle,
-                        size: 190,
+                        size: 150,
                       ),
                       color: Colors.black,
                     )
@@ -154,49 +154,53 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
             //   height: 190,
             // ),
             Flexible(
+                flex: 1,
                 child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    width: 115,
-                    child: Text(
-                      timeFormatting(miliSeconds, 2, 4),
-                      style: GlobalSetting.timeTextStyle,
-                    )),
-                Container(
-                    width: 30,
-                    child: Text(
-                      ':',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: GlobalSetting.timeFontSize,
-                          fontWeight: FontWeight.w200,
-                          letterSpacing: 5.0),
-                    )),
-                Container(
-                    width: 115,
-                    child: Text(
-                      timeFormatting(miliSeconds, 5, 7),
-                      style: GlobalSetting.timeTextStyle,
-                    )),
-                Container(
-                    width: 20,
-                    child: Text(
-                      '.',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: GlobalSetting.timeFontSize,
-                          fontWeight: FontWeight.w200,
-                          letterSpacing: 0),
-                    )),
-                Container(
-                    width: 115,
-                    child: Text(
-                      timeFormatting(miliSeconds, 8, 10),
-                      style: GlobalSetting.timeTextStyle,
-                    )),
-              ],
-            )), // 시간초
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 17,
+                    ),
+                    Container(
+                        width: 100,
+                        child: Text(
+                          timeFormatting(miliSeconds, 2, 4),
+                          style: GlobalSetting.timeTextStyle,
+                        )),
+                    Container(
+                        width: 25,
+                        child: Text(
+                          ':',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: GlobalSetting.timeFontSize,
+                              fontWeight: FontWeight.w200,
+                              letterSpacing: 5.0),
+                        )),
+                    Container(
+                        width: 100,
+                        child: Text(
+                          timeFormatting(miliSeconds, 5, 7),
+                          style: GlobalSetting.timeTextStyle,
+                        )),
+                    Container(
+                        width: 20,
+                        child: Text(
+                          '.',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: GlobalSetting.timeFontSize,
+                              fontWeight: FontWeight.w200,
+                              letterSpacing: 0),
+                        )),
+                    Container(
+                        width: 115,
+                        child: Text(
+                          timeFormatting(miliSeconds, 8, 10),
+                          style: GlobalSetting.timeTextStyle,
+                        )),
+                  ],
+                )), // 시간초
             SizedBox(
               height: 80,
             ),
@@ -216,8 +220,8 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                     iconSize: GlobalSetting.stopwatchStartStopIconSize,
                   ),
                   Positioned(
-                    left: (isStopped) ? 42 : 55,
-                    top: 53,
+                    left: (isStopped) ? 36 : 49,
+                    top: 47,
                     child: Text(
                       (isStopped)
                           ? GlobalSetting.lapRefreshButtonTextAct
@@ -236,11 +240,11 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                   ),
                 ]),
                 SizedBox(
-                  width: 70,
+                  width: 65,
                 ),
                 Column(
                   children: [
-                    SizedBox(height: 56),
+                    SizedBox(height: 50),
                     Icon(Icons.circle,
                         color: isCheet
                             ? GlobalSetting.unselectedSubScreenIconColor
@@ -254,7 +258,7 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                 Column(
                   children: [
                     SizedBox(
-                      height: 56,
+                      height: 50,
                     ),
                     Icon(Icons.circle,
                         color: isCheet
@@ -264,12 +268,12 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
                   ],
                 ),
                 SizedBox(
-                  width: 70,
+                  width: 65,
                 ),
                 Stack(children: [
                   Positioned(
-                    left: 48,
-                    top: 53,
+                    left: 42,
+                    top: 47,
                     child: Text(
                       isRunning
                           ? GlobalSetting.startStopButtonTextAct
@@ -297,9 +301,10 @@ class _StopWatchScreenState extends State<StopWatchScreen> {
               height: 15,
             ),
             Divider(
-                color: Color.fromARGB(50, 230, 230, 230),
-                thickness: 1.2,
-                height: 25),
+              color: Color.fromARGB(50, 230, 230, 230),
+              thickness: 1.2,
+              height: 25,
+            ),
             // lapListWidget(lapName: 'lap1', lapTime: 12345),
             Expanded(
                 flex: 3,

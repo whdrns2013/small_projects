@@ -5,7 +5,7 @@ import 'package:wash_games/screens/TimerScreen.dart';
 import 'package:wash_games/screens/WorldClockScreen.dart';
 
 class GlobalSetting {
-  static double bottomIconSize = 40;
+  static double bottomIconSize = 30;
   static double bottomFontSize = 13;
 
   static String worldTimeText = '세계 시계';
